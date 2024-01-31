@@ -175,7 +175,7 @@ func TestPostgresURL(t *testing.T) {
 		t.Error("Unexpected error")
 	}
 
-	if connection != "dbname=pqtest host=localhost password=password sslmode=verify-full user=pqtest" {
+	if connection != "dbname='pqtest' host='localhost' password='password' sslmode='verify-full' user='pqtest'" {
 		t.Errorf("The connection string was not as expected: %q", connection)
 	}
 
@@ -209,7 +209,7 @@ func TestPostgresqlURLError(t *testing.T) {
 		t.Error("An error was expected")
 	}
 
-	if err.Error() != "parse postgresql://pqtest\\\\/:password@localhost/pqtest?read_timeout=500&sslmode=verify-full&write_timeout=100: invalid character \"\\\\\" in host name" {
+	if err.Error() != "parse \"postgresql://pqtest\\\\\\\\/:password@localhost/pqtest?read_timeout=500&sslmode=verify-full&write_timeout=100\": invalid character \"\\\\\" in host name" {
 		t.Errorf("The error was not as expected: %q", err.Error())
 	}
 

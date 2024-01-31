@@ -40,13 +40,13 @@ func (t TimeoutDriver) Open(connection string) (_ driver.Conn, err error) {
 	for _, setting := range strings.Fields(connection) {
 		s := strings.Split(setting, "=")
 		if s[0] == "read_timeout" {
-			val, err := strconv.Atoi(s[1])
+			val, err := strconv.Atoi(stripQuotes(s[1]))
 			if err != nil {
 				return nil, fmt.Errorf("Error interpreting value for read_timeout")
 			}
 			readTimeout = time.Duration(val) * time.Millisecond // timeout is in milliseconds
 		} else if s[0] == "write_timeout" {
-			val, err := strconv.Atoi(s[1])
+			val, err := strconv.Atoi(stripQuotes(s[1]))
 			if err != nil {
 				return nil, fmt.Errorf("Error interpreting value for write_timeout")
 			}
@@ -65,4 +65,11 @@ func (t TimeoutDriver) Open(connection string) (_ driver.Conn, err error) {
 			readTimeout:    readTimeout,
 			writeTimeout:   writeTimeout},
 		newConnectionStr)
+}
+
+func stripQuotes(s string) string {
+	if len(s) >= 2 && s[0] == '\'' && s[len(s)-1] == '\'' {
+		return s[1 : len(s)-1]
+	}
+	return s
 }
